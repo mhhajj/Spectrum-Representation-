@@ -1,0 +1,262 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>S2</title><meta name="generator" content="MATLAB 9.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2024-12-06"><meta name="DC.source" content="S2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">2.1 Beat Notes and Frequency Resolution</a></li><li><a href="#3">2.1.1 MATLAB Code for Beat Signals</a></li><li><a href="#4">2.1.2 Beat Notes Spectograms</a></li><li><a href="#5">2.1.2(a)</a></li><li><a href="#6">2.1.2(b)</a></li><li><a href="#7">2.1.2(c)</a></li><li><a href="#8">2.1.2(d)</a></li><li><a href="#9">2.1.3 Inverse Relationship: Section Length vs. Frequency Resolution</a></li><li><a href="#10">2.1.3(a)</a></li><li><a href="#11">2.1.3(b)</a></li></ul></div><pre class="codeinput">clear; close <span class="string">all</span>; clc;
+</pre><h2 id="2">2.1 Beat Notes and Frequency Resolution</h2><pre class="codeinput"><span class="comment">% x(t) = B cos(2&#960;f_&#8710;t + &#966;_&#8710;)cos)2&#960;f_ct + &#966;_c)</span>
+
+<span class="comment">% x(t) = A_1 cos(2&#960;f_1t + &#966;_1) + A_2 cos(2&#960;f_2t + &#966;_2)</span>
+</pre><h2 id="3">2.1.1 MATLAB Code for Beat Signals</h2><pre class="codeinput"><span class="comment">% b(t) = 10 cos(2&#960;4t + 2&#960;rand)cos)2&#960;1024t + 2&#960;rand)</span>
+
+Amp = 10; <span class="comment">%-- B in equation above</span>
+fc = 1024; <span class="comment">%-- center frequency</span>
+phic = 2*pi*rand; <span class="comment">%-- phase of 2nd sinusoid (random)</span>
+fDelta = 4; <span class="comment">%-- modulating frequency</span>
+phiDelta = 2*pi*rand; <span class="comment">%-- phase of 1st sinusoid (random)</span>
+tStart = 0; <span class="comment">%-- starting time (secs)</span>
+tStop = 5; <span class="comment">%-- ending time (secs)</span>
+fSamp = 8000; <span class="comment">%-- sampling rate (Hz)</span>
+<span class="comment">%</span>
+tt = tStart:(1/fSamp):tStop; <span class="comment">%-- vector of times</span>
+xx = Amp*cos(2*pi*fc*tt+phic).*cos(2*pi*fDelta*tt+phiDelta);
+</pre><h2 id="4">2.1.2 Beat Notes Spectograms</h2><h2 id="5">2.1.2(a)</h2><pre class="codeinput">figure
+plot(tt,xx)
+title(<span class="string">'b(t) = 10 cos(2&#960;4t + 2&#960;rand)cos)2&#960;1024t + 2&#960;rand)'</span>)
+ylabel(<span class="string">'amplitude'</span>)
+xlabel(<span class="string">'time (s)'</span>)
+</pre><img vspace="5" hspace="5" src="S2_01.png" alt=""> <h2 id="6">2.1.2(b)</h2><pre class="codeinput"><span class="comment">% spectrum lines = f_c &plusmn; f_&#8710;</span>
+spectrum_lines = [fc - fDelta; fc + fDelta]; <span class="comment">% = [1020 1028]</span>
+</pre><h2 id="7">2.1.2(c)</h2><pre class="codeinput">L_sect = 256;
+
+figure
+plotspec(xx,fSamp,L_sect); colorbar, grid <span class="string">on</span>, zoom <span class="string">on</span>
+title(<span class="string">'Beat note: L_{sect} = 256'</span>)
+ylabel(<span class="string">'Frequency (Hz)'</span>)
+xlabel(<span class="string">'t'</span>)
+
+<span class="comment">% There is not enough resolution to see two distinct spectrum lines. Even</span>
+<span class="comment">% when zoomed in, there is not enough data to observe two spectrum lines.</span>
+</pre><pre class="codeoutput error">Undefined function 'plotspec' for input arguments of type 'double'.
+
+Error in S2 (line 44)
+plotspec(xx,fSamp,L_sect); colorbar, grid on, zoom on
+</pre><h2 id="8">2.1.2(d)</h2><pre class="codeinput">L_sect (2:5) = [512 1024 2048 4192]; <span class="comment">% tested these values for L_sect</span>
+
+figure
+plotspec(xx,fSamp,3500); colorbar, grid <span class="string">on</span>, zoom <span class="string">on</span>
+title(<span class="string">'Beat note: L_{sect} = 3500'</span>)
+ylabel(<span class="string">'Frequency (Hz)'</span>)
+xlabel(<span class="string">'t'</span>)
+
+<span class="comment">% confirmed that at L_sect = 3500, we can still observe two spectrum lines</span>
+<span class="comment">% when zoomed in. The spectrum values found in part (b) are correct.</span>
+
+T_sect = 3500 / fSamp; <span class="comment">% = 0.4375 s</span>
+</pre><h2 id="9">2.1.3 Inverse Relationship: Section Length vs. Frequency Resolution</h2><h2 id="10">2.1.3(a)</h2><pre class="codeinput"><span class="comment">% |f_1 - f_2| = C / T_sect</span>
+
+<span class="comment">% C = T_sect * |f_1 - f_2|</span>
+
+C = T_sect * abs(spectrum_lines(1) - spectrum_lines(2)); <span class="comment">% = 3.5</span>
+</pre><h2 id="11">2.1.3(b)</h2><pre class="codeinput">fDeltaNew = 16;
+xxNew = Amp*cos(2*pi*fc*tt+phic).*cos(2*pi*fDeltaNew*tt+phiDelta);
+
+new_spectrum_lines = [fc - fDeltaNew; fc + fDeltaNew];
+<span class="comment">% T_sect = c / |f_1 - f_2|</span>
+predicted_T_sect = C / abs(new_spectrum_lines(1) - new_spectrum_lines(2));
+<span class="comment">% = 0.1094</span>
+
+<span class="comment">% L_sect = T_sect * fs</span>
+predicted_L_sect = predicted_T_sect * fSamp; <span class="comment">% = 875</span>
+
+figure
+plotspec(xxNew,fSamp,L_sect(3)); colorbar, grid <span class="string">on</span>, zoom <span class="string">on</span>
+title(<span class="string">'Beat note'</span>)
+ylabel(<span class="string">'Frequency (Hz)'</span>)
+xlabel(<span class="string">'t'</span>)
+
+<span class="comment">% tested L_sect values as before (256, 512, 1024), able to see two lines at</span>
+<span class="comment">% L_sect(3) = 1024</span>
+
+figure
+plotspec(xxNew,fSamp,predicted_L_sect); colorbar, grid <span class="string">on</span>, zoom <span class="string">on</span>
+title(<span class="string">'Beat note: L_{sect} = 875'</span>)
+ylabel(<span class="string">'Frequency (Hz)'</span>)
+xlabel(<span class="string">'t'</span>)
+
+<span class="comment">% plotted with predicted_L_sect, able to observe two spectrum lines at the</span>
+<span class="comment">% new spectrum values of 1008 and 1040 when zoomed in</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2021b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear; close all; clc;
+%% 2.1 Beat Notes and Frequency Resolution
+
+% x(t) = B cos(2πf_∆t + φ_∆)cos)2πf_ct + φ_c)
+
+% x(t) = A_1 cos(2πf_1t + φ_1) + A_2 cos(2πf_2t + φ_2)
+
+%% 2.1.1 MATLAB Code for Beat Signals
+
+% b(t) = 10 cos(2π4t + 2πrand)cos)2π1024t + 2πrand)
+
+Amp = 10; %REPLACE_WITH_DASH_DASH B in equation above
+fc = 1024; %REPLACE_WITH_DASH_DASH center frequency
+phic = 2*pi*rand; %REPLACE_WITH_DASH_DASH phase of 2nd sinusoid (random)
+fDelta = 4; %REPLACE_WITH_DASH_DASH modulating frequency
+phiDelta = 2*pi*rand; %REPLACE_WITH_DASH_DASH phase of 1st sinusoid (random)
+tStart = 0; %REPLACE_WITH_DASH_DASH starting time (secs)
+tStop = 5; %REPLACE_WITH_DASH_DASH ending time (secs)
+fSamp = 8000; %REPLACE_WITH_DASH_DASH sampling rate (Hz)
+%
+tt = tStart:(1/fSamp):tStop; %REPLACE_WITH_DASH_DASH vector of times
+xx = Amp*cos(2*pi*fc*tt+phic).*cos(2*pi*fDelta*tt+phiDelta);
+
+%% 2.1.2 Beat Notes Spectograms
+
+%% 2.1.2(a)
+
+figure
+plot(tt,xx)
+title('b(t) = 10 cos(2π4t + 2πrand)cos)2π1024t + 2πrand)')
+ylabel('amplitude')
+xlabel('time (s)')
+
+%% 2.1.2(b)
+
+% spectrum lines = f_c ± f_∆
+spectrum_lines = [fc - fDelta; fc + fDelta]; % = [1020 1028]
+
+%% 2.1.2(c)
+
+L_sect = 256;
+
+figure
+plotspec(xx,fSamp,L_sect); colorbar, grid on, zoom on
+title('Beat note: L_{sect} = 256')
+ylabel('Frequency (Hz)')
+xlabel('t')
+
+% There is not enough resolution to see two distinct spectrum lines. Even
+% when zoomed in, there is not enough data to observe two spectrum lines.
+
+%% 2.1.2(d)
+
+L_sect (2:5) = [512 1024 2048 4192]; % tested these values for L_sect
+
+figure
+plotspec(xx,fSamp,3500); colorbar, grid on, zoom on
+title('Beat note: L_{sect} = 3500')
+ylabel('Frequency (Hz)')
+xlabel('t')
+
+% confirmed that at L_sect = 3500, we can still observe two spectrum lines
+% when zoomed in. The spectrum values found in part (b) are correct.
+
+T_sect = 3500 / fSamp; % = 0.4375 s
+
+%% 2.1.3 Inverse Relationship: Section Length vs. Frequency Resolution
+
+%% 2.1.3(a)
+
+% |f_1 - f_2| = C / T_sect
+
+% C = T_sect * |f_1 - f_2|
+
+C = T_sect * abs(spectrum_lines(1) - spectrum_lines(2)); % = 3.5
+
+%% 2.1.3(b)
+
+fDeltaNew = 16;
+xxNew = Amp*cos(2*pi*fc*tt+phic).*cos(2*pi*fDeltaNew*tt+phiDelta);
+
+new_spectrum_lines = [fc - fDeltaNew; fc + fDeltaNew];
+% T_sect = c / |f_1 - f_2|
+predicted_T_sect = C / abs(new_spectrum_lines(1) - new_spectrum_lines(2));
+% = 0.1094
+
+% L_sect = T_sect * fs
+predicted_L_sect = predicted_T_sect * fSamp; % = 875
+
+figure
+plotspec(xxNew,fSamp,L_sect(3)); colorbar, grid on, zoom on
+title('Beat note')
+ylabel('Frequency (Hz)')
+xlabel('t')
+
+% tested L_sect values as before (256, 512, 1024), able to see two lines at
+% L_sect(3) = 1024
+
+figure
+plotspec(xxNew,fSamp,predicted_L_sect); colorbar, grid on, zoom on
+title('Beat note: L_{sect} = 875')
+ylabel('Frequency (Hz)')
+xlabel('t')
+
+% plotted with predicted_L_sect, able to observe two spectrum lines at the
+% new spectrum values of 1008 and 1040 when zoomed in
+##### SOURCE END #####
+--></body></html>
